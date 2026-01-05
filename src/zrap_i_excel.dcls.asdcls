@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZRAP_I_EXCEL'
+@MappingRole: true
+define role ZRAP_I_EXCEL {
+  grant select on ZRAP_I_EXCEL
+  where TRUE;
+}

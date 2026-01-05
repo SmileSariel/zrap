@@ -1,0 +1,82 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'WhoUUID'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'WhoUUID'
+annotate view ZRAP_C_EXCEL with
+{
+  @EndUserText.label: 'WhoUUID'
+  @UI.facet: [ {
+    label: 'General Information', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  
+  @UI.lineItem: [ { 
+    type: #FOR_ACTION, 
+    dataAction: 'FILEUPLOAD', 
+    label: 'Upload', 
+    position: 10 
+  }, { 
+    type: #FOR_ACTION, 
+    dataAction: 'FILEDOWNLOAD', 
+    label: 'Download', 
+    position: 20 
+  } ]
+  
+  @UI.hidden: true
+  WhoUUID;
+  
+  @UI.identification: [ {
+    position: 20 
+  } ]
+  @UI.lineItem: [ {
+    position: 20 
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  Customer;
+  
+  @EndUserText.label: 'Article'
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Article'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Article'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  Article;
+  
+  @UI.identification: [ {
+    position: 40 
+  } ]
+  @UI.lineItem: [ {
+    position: 40 
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  Createdby;
+  
+  @UI.hidden: true
+  Createdat;
+  
+  @UI.hidden: true
+  Lastchangedby;
+  
+  @UI.hidden: true
+  Lastchangedat;
+  
+  @UI.hidden: true
+  Locallastchangedat;
+   
+  @UI.hidden: true
+  _BaseEntity;
+}

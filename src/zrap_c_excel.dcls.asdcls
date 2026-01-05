@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZRAP_C_EXCEL'
+@MappingRole: true
+define role ZRAP_C_EXCEL {
+  grant select on ZRAP_C_EXCEL
+  where INHERITING CONDITIONS FROM ENTITY ZRAP_I_EXCEL REPLACING { ROOT WITH _BaseEntity };
+}

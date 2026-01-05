@@ -1,0 +1,55 @@
+managed implementation in class ZBP_RAP_I_EXCEL unique;
+strict ( 2 );
+with draft;
+extensible;
+define behavior for ZRAP_I_EXCEL alias EXCEL
+persistent table ZRAP_EXCEL
+extensible
+draft table ZRAP_EXCEL_D
+etag master Locallastchangedat
+lock master total etag Locallastchangedat
+authorization master( global )
+{
+  field ( readonly )
+   WhoUUID,
+   Createdby,
+   Createdat,
+   Lastchangedby,
+   Lastchangedat,
+   Locallastchangedat;
+
+  field ( numbering : managed )
+   WhoUUID;
+
+  static action fileUpload parameter zrap_a_file_parameter;
+  static action fileDownload result [1] zrap_a_file_parameter;
+
+  //determination setCustomer on save { create; }
+
+  validation validateCustomer on save { create; }
+
+  //determine action customerId { validation customer; }
+
+  create( precheck );
+  update;
+  delete;
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZRAP_EXCEL corresponding extensible
+  {
+    WhoUUID = who_uuid;
+    Customer = customer;
+    Article = article;
+    Createdby = createdby;
+    Createdat = createdat;
+    Lastchangedby = lastchangedby;
+    Lastchangedat = lastchangedat;
+    Locallastchangedat = locallastchangedat;
+  }
+
+}

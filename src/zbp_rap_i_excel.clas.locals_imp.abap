@@ -31,9 +31,9 @@ CLASS LHC_ZRAP_I_EXCEL IMPLEMENTATION.
     ASSIGN KEYS[ 1 ] TO FIELD-SYMBOL(<KEY>).
     CHECK SY-SUBRC = 0.
 
-    CHECK <KEY>-%PARAM-FILEEXTENSION = 'xlsx'.
+    CHECK <KEY>-%PARAM-_filedata-FILEname cp '*.xlsx'.
 
-    DATA(LV_FILE_CONTENT) = <KEY>-%PARAM-FILECONTENT.
+    DATA(LV_FILE_CONTENT) = <KEY>-%PARAM-_filedata-FILECONTENT.
     DATA(LO_READ_ACCESS) = XCO_CP_XLSX=>DOCUMENT->FOR_FILE_CONTENT( LV_FILE_CONTENT )->READ_ACCESS( ).
     DATA(LO_WORKSHEET) = LO_READ_ACCESS->GET_WORKBOOK( )->WORKSHEET->FOR_NAME( 'Sheet1' ).
     DATA(LO_SELECTION) = XCO_CP_XLSX_SELECTION=>PATTERN_BUILDER->SIMPLE_FROM_TO( )->FROM_COLUMN(
@@ -107,10 +107,10 @@ CLASS LHC_ZRAP_I_EXCEL IMPLEMENTATION.
     DATA(LV_FILE_CONTENT) = LO_WRITE_ACCESS->GET_FILE_CONTENT( ).
     RESULT = VALUE #( FOR KEY IN KEYS (
                         %CID    = KEY-%CID
-                        %PARAM  = VALUE #( FILECONTENT    = LV_FILE_CONTENT
-                                           FILENAME       = 'Download_Template'
-                                           FILEEXTENSION  = 'xlsx'
-                                           MIMETYPE       = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ) )
+                        %PARAM  = value #( _FileData = value #( FILECONTENT    = LV_FILE_CONTENT
+                                                                FILENAME       = 'Download_Template'
+                                                                FILEEXTENSION  = 'xlsx'
+                                                                MIMETYPE       = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ) ) )
                     ).
   ENDMETHOD.
 

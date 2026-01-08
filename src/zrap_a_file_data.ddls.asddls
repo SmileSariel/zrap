@@ -14,6 +14,6 @@ define root abstract entity ZRAP_A_FILE_DATA
   }  
   @EndUserText.label: 'Please select file'  
   fileContent   : abap.rawstring(0);
-  //@UI.hidden:true
-  //fileExtension : abap.char(128);
+  @UI.hidden:true
+  fileExtension : abap.char(128);
 }

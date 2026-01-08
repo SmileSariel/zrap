@@ -22,7 +22,7 @@ authorization master( global )
    WhoUUID;
 
   static action fileUpload deep parameter zrap_a_file_parameter ;
-  static action fileDownload result [1] zrap_a_file_parameter;
+  static action fileDownload deep result [1] zrap_a_file_parameter;
 
   //determination setCustomer on save { create; }
 

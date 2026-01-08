@@ -12,7 +12,7 @@ use etag
   use delete;
 
   use action fileUpload;
-  use action fileDownload;
+  //use action fileDownload;
 
   use action Edit;
   use action Activate;

@@ -14,16 +14,11 @@ annotate view ZRAP_C_EXCEL with
     type: #IDENTIFICATION_REFERENCE
   } ]
   
-  @UI.lineItem: [ { 
+  @UI.lineItem: [ {  
     type: #FOR_ACTION, 
     dataAction: 'FILEUPLOAD', 
-    label: 'Upload', 
+    label: 'Upload File', 
     position: 10 
-  }, { 
-    type: #FOR_ACTION, 
-    dataAction: 'FILEDOWNLOAD', 
-    label: 'Download', 
-    position: 20 
   } ]
   
   @UI.hidden: true

@@ -65,7 +65,7 @@ CLASS LHC_ZRAP_I_EXCEL IMPLEMENTATION.
         APPEND VALUE #( %CID = 'cid' && SY-TABIX ) TO FAILED-EXCEL.
 
         APPEND VALUE #( %CID = 'cid' && SY-TABIX
-                        %STATE_AREA         = 'VALIDATE_AGENCY'
+                        %STATE_AREA         = IF_ABAP_BEHV=>state_area_all
                         %MSG                = NEW /DMO/CM_FLIGHT_MESSAGES(
                                                           TEXTID   = /DMO/CM_FLIGHT_MESSAGES=>ENTER_AGENCY_ID
                                                           SEVERITY = IF_ABAP_BEHV_MESSAGE=>SEVERITY-ERROR )

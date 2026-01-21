@@ -100,7 +100,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
     result = VALUE #( FOR key IN keys (
                         %cid    = key-%cid
                         %param  = VALUE #( filecontent = lv_file_content
-                                           filename    = 'Download_Template'
+                                           filename    = 'Download_Template.xlsx'
                                            mimetype    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ) ) ).
 
     APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-success

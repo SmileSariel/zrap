@@ -3,6 +3,7 @@ strict ( 2 );
 extensible;
 use draft;
 use side effects;
+
 define behavior for ZRAP_C_EXCEL alias EXCEL
 extensible
 use etag
@@ -12,7 +13,7 @@ use etag
   use delete;
 
   use action fileUpload;
-  //use action fileDownload;
+  use action fileDownload;
 
   use action Edit;
   use action Activate;

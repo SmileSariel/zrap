@@ -1,38 +1,41 @@
 @Metadata.allowExtensions: true
 @Metadata.ignorePropagatedAnnotations: true
-@Endusertext: {
-  Label: '###GENERATED Core Data Service Entity'
+@EndUserText: {
+  label: '###GENERATED Core Data Service Entity'
 }
-@Objectmodel: {
-  Sapobjectnodetype.Name: 'ZRAP_EXCEL'
+@ObjectModel: {
+  sapObjectNodeType.name: 'ZRAP_EXCEL'
 }
 @AccessControl.authorizationCheck: #MANDATORY
 define root view entity ZRAP_C_EXCEL
-  provider contract TRANSACTIONAL_QUERY
+  provider contract transactional_query
   as projection on ZRAP_I_EXCEL
-  association [1..1] to ZRAP_I_EXCEL as _BaseEntity on $projection.WHOUUID = _BaseEntity.WHOUUID
+  association [1..1] to ZRAP_I_EXCEL as _BaseEntity on $projection.WhoUUID = _BaseEntity.WhoUUID
 {
   key WhoUUID,
   Customer,
   Article,
+  MessageType,
+  MessageCode,
+  MessageText,
   @Semantics: {
-    User.Createdby: true
+    user.createdBy: true
   }
   Createdby,
   @Semantics: {
-    Systemdatetime.Createdat: true
+    systemDateTime.createdAt: true
   }
   Createdat,
   @Semantics: {
-    User.Localinstancelastchangedby: true
+    user.localInstanceLastChangedBy: true
   }
   Lastchangedby,
   @Semantics: {
-    Systemdatetime.Localinstancelastchangedat: true
+    systemDateTime.localInstanceLastChangedAt: true
   }
   Lastchangedat,
   @Semantics: {
-    Systemdatetime.Localinstancelastchangedat: true
+    systemDateTime.localInstanceLastChangedAt: true
   }
   Locallastchangedat,
   _BaseEntity

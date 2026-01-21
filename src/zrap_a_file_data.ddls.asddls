@@ -8,12 +8,10 @@ define root abstract entity ZRAP_A_FILE_DATA
   @Semantics.largeObject : { 
     mimeType: 'mimeType', 
     fileName: 'fileName', 
-    acceptableMimeTypes: [ 'text/*', 'image/*', 'application/*' ],
+    acceptableMimeTypes: [ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ],
     cacheControl.maxAge: #MEDIUM,
     contentDispositionPreference: #INLINE // #ATTACHMENT - download as file #INLINE - open in new window
   }  
   @EndUserText.label: 'Please select file'  
   fileContent   : abap.rawstring(0);
-  @UI.hidden:true
-  fileExtension : abap.char(128);
 }

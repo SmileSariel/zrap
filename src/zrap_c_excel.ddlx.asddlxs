@@ -1,8 +1,17 @@
-@Metadata.layer: #CORE
-@UI.headerInfo.title.type: #STANDARD
-@UI.headerInfo.title.value: 'WhoUUID'
-@UI.headerInfo.description.type: #STANDARD
-@UI.headerInfo.description.value: 'WhoUUID'
+@Metadata.layer: #CORE  
+@UI.headerInfo: {
+  typeName: 'Develop Management',
+  typeNamePlural: 'Customer Article Uploading', 
+  typeImageUrl: 'sap-icon://syntax', 
+  title: { 
+    type: #STANDARD,
+    value: 'Customer'
+  },
+  description: {
+    type: #STANDARD,
+    value: 'Article'
+  }
+}
 annotate view ZRAP_C_EXCEL with
 {
   @EndUserText.label: 'WhoUUID'
@@ -19,6 +28,11 @@ annotate view ZRAP_C_EXCEL with
     dataAction: 'FILEUPLOAD', 
     label: 'Upload File', 
     position: 10 
+  }, {  
+    type: #FOR_ACTION, 
+    dataAction: 'FILEDOWNLOAD', 
+    label: 'Download Template', 
+    position: 20 
   } ]
   
   @UI.hidden: true
@@ -49,14 +63,37 @@ annotate view ZRAP_C_EXCEL with
   } ]
   Article;
   
+  @EndUserText.label: 'Message Type'
   @UI.identification: [ {
-    position: 40 
+    position: 40,
+    criticality: 'MessageCode'
   } ]
   @UI.lineItem: [ {
-    position: 40 
+    position: 40,
+    criticality: 'MessageCode'
+  } ]
+  MessageType;
+  
+  @EndUserText.label: 'Message'
+  MessageCode;
+  
+  @EndUserText.label: 'Message Text'
+  @UI.identification: [ {
+    position: 50 
+  } ]
+  @UI.lineItem: [ {
+    position: 50 
+  } ]
+  MessageText;
+  
+  @UI.identification: [ {
+    position: 60 
+  } ]
+  @UI.lineItem: [ {
+    position: 60 
   } ]
   @UI.selectionField: [ {
-    position: 40 
+    position: 60 
   } ]
   Createdby;
   

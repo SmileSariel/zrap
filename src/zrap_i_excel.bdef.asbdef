@@ -2,6 +2,7 @@ managed implementation in class ZBP_RAP_I_EXCEL unique;
 strict ( 2 );
 with draft;
 extensible;
+
 define behavior for ZRAP_I_EXCEL alias EXCEL
 persistent table ZRAP_EXCEL
 extensible
@@ -12,6 +13,8 @@ authorization master( global )
 {
   field ( readonly )
    WhoUUID,
+   MessageType,
+   MessageText,
    Createdby,
    Createdat,
    Lastchangedby,
@@ -22,13 +25,9 @@ authorization master( global )
    WhoUUID;
 
   static action fileUpload deep parameter zrap_a_file_parameter ;
-  static action fileDownload deep result [1] zrap_a_file_parameter;
+  static action fileDownload deep result [1] zrap_a_file_data;
 
-  //determination setCustomer on save { create; }
-
-  validation validateCustomer on save { create; }
-
-  //determine action customerId { validation customer; }
+  validation validatedata on save { create; field Customer, Article; }
 
   create( precheck );
   update;
@@ -45,6 +44,8 @@ authorization master( global )
     WhoUUID = who_uuid;
     Customer = customer;
     Article = article;
+    MessageType = messagetype;
+    MessageText = messagetext;
     Createdby = createdby;
     Createdat = createdat;
     Lastchangedby = lastchangedby;

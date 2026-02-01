@@ -1,3 +1,28 @@
+*CLASS lsc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_saver.
+*
+*  PROTECTED SECTION.
+*
+*    METHODS save_modified REDEFINITION.
+*
+*ENDCLASS.
+*
+*CLASS lsc_zrap_i_excel IMPLEMENTATION.
+*
+*  METHOD save_modified.
+*    IF create-excel IS NOT INITIAL.
+*      READ ENTITIES OF zrap_i_excel IN LOCAL MODE
+*        ENTITY excel
+*          ALL FIELDS
+*          WITH CORRESPONDING #( create-excel )
+*        RESULT DATA(lt_excel).
+*    ENDIF.
+*
+*    RAISE ENTITY EVENT zrap_i_excel~refreshdata
+*      FROM VALUE #( FOR ls_excel IN create-excel ( %key = ls_excel-%key ) ).
+*  ENDMETHOD.
+*
+*ENDCLASS.
+
 CLASS lhc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
     TYPES: BEGIN OF ty_file,
@@ -7,19 +32,27 @@ CLASS lhc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_handler.
     TYPES: tt_file TYPE STANDARD TABLE OF ty_file WITH DEFAULT KEY.
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR excel RESULT result.
-
+    METHODS precheck_create FOR PRECHECK
+      IMPORTING entities FOR CREATE excel.
     METHODS fileupload FOR MODIFY
       IMPORTING keys FOR ACTION excel~fileupload.
     METHODS filedownload FOR MODIFY
       IMPORTING keys FOR ACTION excel~filedownload RESULT result.
     METHODS validatedata FOR VALIDATE ON SAVE
       IMPORTING keys FOR excel~validatedata.
-    METHODS precheck_create FOR PRECHECK
-      IMPORTING entities FOR CREATE excel.
+    METHODS get_global_features FOR GLOBAL FEATURES
+      IMPORTING REQUEST requested_features FOR excel RESULT result.
 ENDCLASS.
 
 CLASS lhc_zrap_i_excel IMPLEMENTATION.
+
+  METHOD get_global_features.
+  ENDMETHOD.
+
   METHOD get_global_authorizations.
+  ENDMETHOD.
+
+  METHOD precheck_create.
   ENDMETHOD.
 
   METHOD fileupload.
@@ -52,6 +85,8 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
           AND article  EQ @<ls_create>-article.
       IF sy-subrc EQ 0.
         <ls_create>-%is_draft   = if_abap_behv=>mk-on.
+        <ls_create>-%control    = VALUE #( customer = if_abap_behv=>mk-on
+                                           article  = if_abap_behv=>mk-on ).
         <ls_create>-messagetype = 'E'.
         <ls_create>-messagecode = 1.
         <ls_create>-messagetext = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }|.
@@ -59,6 +94,8 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                                                       text     = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }| ) )
           TO reported-excel.
       ELSE.
+        <ls_create>-%control    = VALUE #( customer = if_abap_behv=>mk-on
+                                           article  = if_abap_behv=>mk-on ).
         <ls_create>-messagetype = 'S'.
         <ls_create>-messagetext = |Data saved successfully!|.
       ENDIF.
@@ -69,39 +106,49 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
         CREATE FIELDS ( customer article messagetype messagecode messagetext ) AUTO FILL CID
         WITH lt_create
         REPORTED DATA(lt_report)
-        FAILED DATA(lt_failed).
-    IF lt_failed IS INITIAL.
-      APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-warning
-                                                    text     = 'Please click "Go" to refreshing data after uploading!' ) )
-        TO reported-excel.
-    ENDIF.
+        FAILED DATA(lt_failed)
+        MAPPED mapped.
+*    IF lt_failed IS INITIAL.
+*      APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-warning
+*                                                    text     = 'Please click "Go" to refreshing data after uploading!' ) )
+*        TO reported-excel.
+*    ENDIF.
+
+*    result = VALUE #( FOR ls_mapped IN mapped-excel ( %cid = ls_mapped-%cid %param-%tky = ls_mapped-%tky ) ).
 
   ENDMETHOD.
 
 
   METHOD filedownload.
 
-    DATA(lo_write_access) = xco_cp_xlsx=>document->empty( )->write_access( ).
-    DATA(lo_worksheet) = lo_write_access->get_workbook( )->worksheet->at_position( 1 ).
-    lo_worksheet->set_name( 'test' ).
-    DATA(lo_selection) = xco_cp_xlsx_selection=>pattern_builder->simple_from_to(
-                           )->from_column( xco_cp_xlsx=>coordinate->for_alphabetic_value( 'A' )
-                           )->to_column( xco_cp_xlsx=>coordinate->for_alphabetic_value( 'B' )
-                           )->from_row( xco_cp_xlsx=>coordinate->for_numeric_value( 1 )
-                           )->get_pattern( ).
+*    DATA(lo_write_access) = xco_cp_xlsx=>document->empty( )->write_access( ).
+*    DATA(lo_worksheet) = lo_write_access->get_workbook( )->worksheet->at_position( 1 ).
+*    lo_worksheet->set_name( 'test' ).
+*    DATA(lo_selection) = xco_cp_xlsx_selection=>pattern_builder->simple_from_to(
+*                           )->from_column( xco_cp_xlsx=>coordinate->for_alphabetic_value( 'A' )
+*                           )->to_column( xco_cp_xlsx=>coordinate->for_alphabetic_value( 'B' )
+*                           )->from_row( xco_cp_xlsx=>coordinate->for_numeric_value( 1 )
+*                           )->get_pattern( ).
+*
+*    DATA(lt_download) = VALUE tt_file( ( customer = 'Customer' article  = 'Article' ) ).
+*
+*    lo_worksheet->select( lo_selection )->row_stream( )->operation->write_from( REF #( lt_download )
+*      )->execute( ).
+*
+*    DATA(lv_file_content) = lo_write_access->get_file_content( ).
 
-    DATA(lt_download) = VALUE tt_file( ( customer = 'Customer' article  = 'Article' ) ).
+    READ ENTITIES OF zrap_i_template
+      ENTITY template
+        ALL FIELDS WITH VALUE #( ( %key-progid = 'ZTEST' ) )
+      RESULT DATA(lt_template).
 
-    lo_worksheet->select( lo_selection )->row_stream( )->operation->write_from( REF #( lt_download )
-      )->execute( ).
-
-    DATA(lv_file_content) = lo_write_access->get_file_content( ).
-
+    DATA(ls_template) = VALUE #( lt_template[ 1 ] OPTIONAL ).
+    "data(lv_filcontent) = CL_WEB_HTTP_UTILITY=>encode_x_base64( ls_template-filecontent ).
     result = VALUE #( FOR key IN keys (
-                        %cid    = key-%cid
-                        %param  = VALUE #( filecontent = lv_file_content
-                                           filename    = 'Download_Template.xlsx'
-                                           mimetype    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ) ) ).
+                        %cid   = key-%cid
+                        %param = VALUE #( filecontent = ls_template-filecontent
+                                          filename    = ls_template-filename
+                                          mimetype    = ls_template-mimetype ) ) ).
 
     APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-success
                                                   text     = 'Template has been downloaded!' ) )
@@ -137,6 +184,4 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD precheck_create.
-  ENDMETHOD.
 ENDCLASS.

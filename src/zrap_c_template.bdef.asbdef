@@ -1,21 +1,15 @@
-projection implementation in class ZBP_RAP_C_EXCEL unique;
+projection implementation in class ZBP_C_RAP_TEMPLATE unique;
 strict ( 2 );
 extensible;
 use draft;
 use side effects;
-
-define behavior for ZRAP_C_EXCEL alias EXCEL
+define behavior for ZRAP_C_TEMPLATE alias ZrapCTemplate
 extensible
 use etag
 {
   use create;
   use update;
   use delete;
-
-  use action fileUpload;
-  use action fileDownload;
-
-  //use event refreshdata;
 
   use action Edit;
   use action Activate;

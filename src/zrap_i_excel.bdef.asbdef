@@ -4,34 +4,39 @@ with draft;
 extensible;
 
 define behavior for ZRAP_I_EXCEL alias EXCEL
-persistent table ZRAP_EXCEL
+with additional save
+persistent table zrap_excel
 extensible
-draft table ZRAP_EXCEL_D
+draft table zrap_excel_d
 etag master Locallastchangedat
 lock master total etag Locallastchangedat
-authorization master( global )
+authorization master ( global )
 {
   field ( readonly )
-   WhoUUID,
-   MessageType,
-   MessageText,
-   Createdby,
-   Createdat,
-   Lastchangedby,
-   Lastchangedat,
-   Locallastchangedat;
+  WhoUUID,
+  MessageType,
+  MessageText,
+  Createdby,
+  Createdat,
+  Lastchangedby,
+  Lastchangedat,
+  Locallastchangedat;
 
   field ( numbering : managed )
-   WhoUUID;
+  WhoUUID;
 
-  static action fileUpload deep parameter zrap_a_file_parameter ;
-  static action fileDownload deep result [1] zrap_a_file_data;
+  static factory action ( features : global ) fileUpload deep parameter zrap_a_file_parameter [0..*];
+  static action fileDownload result [1] zrap_a_template;
+
+  //event refreshdata for side effects;
+
+  //side effects { event refreshdata affects $self, messages; }
 
   validation validatedata on save { create; field Customer, Article; }
 
-  create( precheck );
+  create ( precheck );
   update;
-  delete;
+  delete ( features : global );
 
   draft action Activate optimized;
   draft action Discard;
@@ -39,18 +44,18 @@ authorization master( global )
   draft action Resume;
   draft determine action Prepare;
 
-  mapping for ZRAP_EXCEL corresponding extensible
-  {
-    WhoUUID = who_uuid;
-    Customer = customer;
-    Article = article;
-    MessageType = messagetype;
-    MessageText = messagetext;
-    Createdby = createdby;
-    Createdat = createdat;
-    Lastchangedby = lastchangedby;
-    Lastchangedat = lastchangedat;
-    Locallastchangedat = locallastchangedat;
-  }
+  mapping for zrap_excel corresponding extensible
+    {
+      WhoUUID            = who_uuid;
+      Customer           = customer;
+      Article            = article;
+      MessageType        = messagetype;
+      MessageText        = messagetext;
+      Createdby          = createdby;
+      Createdat          = createdat;
+      Lastchangedby      = lastchangedby;
+      Lastchangedat      = lastchangedat;
+      Locallastchangedat = locallastchangedat;
+    }
 
 }

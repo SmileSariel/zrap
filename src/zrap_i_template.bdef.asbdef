@@ -1,0 +1,51 @@
+managed implementation in class ZBP_R_RAP_TEMPLATE unique;
+strict ( 2 );
+with draft;
+extensible;
+define behavior for ZRAP_I_TEMPLATE alias template
+persistent table ZRAP_TEMPLATE
+extensible
+draft table ZRAP_TEMPLATE_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+{
+  field ( mandatory : create )
+   Progid;
+
+  field ( readonly )
+   LocalCreatedBy,
+   LocalCreatedAt,
+   LocalLastChangedBy,
+   LocalLastChangedAt,
+   LastChangedAt;
+
+  field ( readonly : update )
+   Progid;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZRAP_TEMPLATE corresponding extensible
+  {
+    Progid = progid;
+    Comments = comments;
+    FileName = file_name;
+    MimeType = mime_type;
+    FileContent = file_content;
+    LocalCreatedBy = local_created_by;
+    LocalCreatedAt = local_created_at;
+    LocalLastChangedBy = local_last_changed_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LastChangedAt = last_changed_at;
+  }
+
+}

@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZRAP_C_TEMPLATE'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZRAP_C_TEMPLATE'
+  }
+}
+define service ZUI_RAP_TEMPLATE_O4 provider contracts odata_v4_ui {
+  expose ZRAP_C_TEMPLATE;
+}

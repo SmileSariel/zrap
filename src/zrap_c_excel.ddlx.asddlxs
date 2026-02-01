@@ -33,7 +33,7 @@ annotate view ZRAP_C_EXCEL with
     dataAction: 'FILEDOWNLOAD', 
     label: 'Download Template', 
     position: 20 
-  } ]
+  }]
   
   @UI.hidden: true
   WhoUUID;

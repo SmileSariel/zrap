@@ -42,11 +42,18 @@ CLASS lhc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR excel~validatedata.
     METHODS get_global_features FOR GLOBAL FEATURES
       IMPORTING REQUEST requested_features FOR excel RESULT result.
+    METHODS get_instance_features FOR INSTANCE FEATURES
+      IMPORTING keys REQUEST requested_features FOR excel RESULT result.
+    METHODS call_bapi FOR MODIFY
+      IMPORTING keys FOR ACTION excel~call_bapi RESULT result.
 ENDCLASS.
 
 CLASS lhc_zrap_i_excel IMPLEMENTATION.
 
   METHOD get_global_features.
+  ENDMETHOD.
+
+  METHOD get_instance_features.
   ENDMETHOD.
 
   METHOD get_global_authorizations.
@@ -89,6 +96,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                                            article  = if_abap_behv=>mk-on ).
         <ls_create>-messagetype = 'E'.
         <ls_create>-messagecode = 1.
+        <ls_create>-processed   = '0'.
         <ls_create>-messagetext = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }|.
         APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-error
                                                       text     = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }| ) )
@@ -96,6 +104,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
       ELSE.
         <ls_create>-%control    = VALUE #( customer = if_abap_behv=>mk-on
                                            article  = if_abap_behv=>mk-on ).
+        <ls_create>-processed   = '0'.
         <ls_create>-messagetype = 'S'.
         <ls_create>-messagetext = |Data saved successfully!|.
       ENDIF.
@@ -103,7 +112,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
 
     MODIFY ENTITIES OF zrap_i_excel IN LOCAL MODE
       ENTITY excel
-        CREATE FIELDS ( customer article messagetype messagecode messagetext ) AUTO FILL CID
+        CREATE FIELDS ( customer article messagetype messagecode messagetext processed ) AUTO FILL CID
         WITH lt_create
         REPORTED DATA(lt_report)
         FAILED DATA(lt_failed)
@@ -167,7 +176,8 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
     LOOP AT lt_excel INTO DATA(ls_excel).
       SELECT COUNT( * )
         FROM zrap_excel
-        WHERE customer EQ @ls_excel-customer
+        WHERE who_uuid ne @ls_excel-whouuid
+          and customer EQ @ls_excel-customer
           AND article  EQ @ls_excel-article.
       IF sy-subrc EQ 0.
         APPEND VALUE #( %tky = ls_excel-%tky ) TO failed-excel.
@@ -181,6 +191,38 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                         %element-article    = if_abap_behv=>mk-on ) TO reported-excel.
       ENDIF.
     ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD call_bapi.
+
+    READ ENTITIES OF zrap_i_excel IN LOCAL MODE
+      ENTITY excel
+        FIELDS ( customer )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_excel).
+
+    DELETE lt_excel WHERE %is_draft NE if_abap_behv=>mk-on.
+
+    IF lt_excel IS INITIAL.
+      MODIFY ENTITIES OF zrap_i_excel IN LOCAL MODE
+        ENTITY excel
+        UPDATE FIELDS ( processed )
+        WITH VALUE #( FOR ls_key IN keys ( %tky      = ls_key-%tky
+                                           processed = '1' ) )
+        REPORTED reported
+        FAILED failed
+        MAPPED mapped.
+    ELSE.
+      failed-excel = VALUE #( FOR ls_excel IN lt_excel ( %tky = ls_excel-%tky ) ).
+      reported-excel = vaLUE #(  FOR ls_excel IN lt_excel ( %tky = ls_excel-%tky
+                        %state_area         = if_abap_behv=>state_area_all
+                        %msg                = new_message_with_text(
+                                                text     = |Data is draft!Please save first|
+                                                severity = if_abap_behv_message=>severity-error )
+                        %element-customer   = if_abap_behv=>mk-on
+                        %element-article    = if_abap_behv=>mk-on ) ).
+    ENDIF.
 
   ENDMETHOD.
 

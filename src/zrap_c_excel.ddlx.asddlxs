@@ -31,8 +31,13 @@ annotate view ZRAP_C_EXCEL with
   }, {  
     type: #FOR_ACTION, 
     dataAction: 'FILEDOWNLOAD', 
-    label: 'Download Template', 
+    label: 'Template(RAP)', 
     position: 20 
+  }, {  
+    type: #FOR_ACTION, 
+    dataAction: 'CALL_BAPI', 
+    label: 'To Call BAPI', 
+    position: 30 
   }]
   
   @UI.hidden: true
@@ -46,7 +51,7 @@ annotate view ZRAP_C_EXCEL with
   } ]
   @UI.selectionField: [ {
     position: 20 
-  } ]
+  } ] 
   Customer;
   
   @EndUserText.label: 'Article'
@@ -85,6 +90,15 @@ annotate view ZRAP_C_EXCEL with
     position: 50 
   } ]
   MessageText;
+  
+  @EndUserText.label: 'Processed'
+  @UI.identification: [ {
+    position: 55 
+  } ]
+  @UI.lineItem: [ {
+    position: 55 
+  } ]
+  Processed;
   
   @UI.identification: [ {
     position: 60 

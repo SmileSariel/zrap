@@ -41,6 +41,7 @@ authorization master( global )
     FileName = file_name;
     MimeType = mime_type;
     FileContent = file_content;
+    Instruction = instruction;
     LocalCreatedBy = local_created_by;
     LocalCreatedAt = local_created_at;
     LocalLastChangedBy = local_last_changed_by;

@@ -16,6 +16,7 @@ authorization master ( global )
   WhoUUID,
   MessageType,
   MessageText,
+  Processed,
   Createdby,
   Createdat,
   Lastchangedby,
@@ -25,14 +26,24 @@ authorization master ( global )
   field ( numbering : managed )
   WhoUUID;
 
-  static factory action ( features : global ) fileUpload deep parameter zrap_a_file_parameter [0..*];
+  static action ( features : global ) fileUpload deep parameter zrap_a_file_parameter;
   static action fileDownload result [1] zrap_a_template;
+
+  action ( features : instance ) call_bapi result [1..*] $self;
+
+  determine action validatecustomer { validation validatedata; }
+  determine action validatearticle  { validation validatedata; }
+
+  side effects { field Customer affects field MessageType, field MessageCode, field MessageText;
+                  field Article  affects field MessageType, field MessageCode, field MessageText;
+                  determine action validatecustomer executed on field Customer affects field MessageType, field MessageCode, field MessageText, messages;
+                  determine action validatearticle  executed on field Article  affects field MessageType, field MessageCode, field MessageText, messages; }
 
   //event refreshdata for side effects;
 
   //side effects { event refreshdata affects $self, messages; }
 
-  validation validatedata on save { create; field Customer, Article; }
+  validation validatedata on save { create; update; field Customer, Article; }
 
   create ( precheck );
   update;
@@ -51,6 +62,7 @@ authorization master ( global )
       Article            = article;
       MessageType        = messagetype;
       MessageText        = messagetext;
+      Processed          = processed;
       Createdby          = createdby;
       Createdat          = createdat;
       Lastchangedby      = lastchangedby;

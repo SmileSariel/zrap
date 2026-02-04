@@ -6,13 +6,32 @@
 annotate view ZRAP_C_TEMPLATE with
 {
   @EndUserText.label: 'Progid'
-  @UI.facet: [ {
+  @UI.facet: [ { 
+    id: 'General', 
+    type: #COLLECTION, 
+    label: 'General', 
+    position: 10 
+  }, {
     label: 'General Information', 
+    parentId: 'General', 
     id: 'GeneralInfo', 
     purpose: #STANDARD, 
     position: 10 , 
     type: #IDENTIFICATION_REFERENCE
+  }, { 
+    id: 'Instruction', 
+    type: #COLLECTION, 
+    label: 'Instruction', 
+    position: 20 
+  }, { 
+    id: 'Instructions', 
+    purpose: #STANDARD, 
+    type: #FIELDGROUP_REFERENCE,  
+    parentId: 'Instruction', 
+    position: 30, 
+    targetQualifier: 'Instructions'
   } ]
+  
   @UI.identification: [ {
     position: 10 , 
     label: 'Progid'
@@ -40,7 +59,6 @@ annotate view ZRAP_C_TEMPLATE with
   } ]
   Comments;
   
-
   @UI.hidden: true
   FileName;
   
@@ -57,6 +75,13 @@ annotate view ZRAP_C_TEMPLATE with
     label: 'FileContent'
   } ]
   FileContent;
+   
+  @UI.multiLineText: true
+  @UI.fieldGroup: [ {
+    position: 10,
+    qualifier: 'Instructions' 
+  } ]
+  Instruction;
   
   @UI.hidden: true
   LocalCreatedBy;
@@ -78,5 +103,5 @@ annotate view ZRAP_C_TEMPLATE with
   
 
   @UI.hidden: true
-  _BaseEntity;
+  _baseentity;
 }

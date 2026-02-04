@@ -3,13 +3,14 @@
 @ObjectModel.sapObjectNodeType.name: 'ZRAP_TEMPLATE'
 @EndUserText.label: '###GENERATED Core Data Service Entity'
 define root view entity ZRAP_I_TEMPLATE
-  as select from ZRAP_TEMPLATE
+  as select from zrap_template
 {
   key progid as Progid,
   comments as Comments,
   file_name as FileName,
   mime_type as MimeType,
   file_content as FileContent,
+  instruction as Instruction,
   @Semantics.user.createdBy: true
   local_created_by as LocalCreatedBy,
   @Semantics.systemDateTime.createdAt: true

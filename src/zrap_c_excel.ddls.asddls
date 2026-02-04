@@ -18,6 +18,7 @@ define root view entity ZRAP_C_EXCEL
   MessageType,
   MessageCode,
   MessageText,
+  Processed,
   @Semantics: {
     user.createdBy: true
   }

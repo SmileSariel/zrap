@@ -15,6 +15,7 @@ define root view entity ZRAP_I_EXCEL
                    else 0
   end as MessageCode,
   messagetext as MessageText,
+  processed as Processed,
   @Semantics.user.createdBy: true
   createdby as Createdby,
   @Semantics.systemDateTime.createdAt: true

@@ -25,6 +25,8 @@ define root view entity ZRAP_C_TEMPLATE
   }  
   @EndUserText.label: 'Template'
   FileContent,
+  @EndUserText.label: 'Instructions'
+  Instruction,
   @Semantics: {
     user.createdBy: true
   }

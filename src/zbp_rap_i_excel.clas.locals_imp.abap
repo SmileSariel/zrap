@@ -75,6 +75,27 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD precheck_create.
+    LOOP AT entities INTO DATA(ls_enity).
+
+      SELECT COUNT( * )
+        FROM zrap_excel
+          WHERE customer EQ @ls_enity-customer
+            AND article  EQ @ls_enity-article.
+      IF sy-subrc EQ 0.
+
+        APPEND VALUE #( %key = ls_enity-%key ) TO failed-excel.
+
+        APPEND VALUE #( %key = ls_enity-%key
+                        %state_area         = if_abap_behv=>state_area_all
+                        %msg                = new_message_with_text(
+                                                text     = |Data is already exist!{ ls_enity-customer }/{ ls_enity-article }|
+                                                severity = if_abap_behv_message=>severity-error )
+                        %element-customer   = if_abap_behv=>mk-on
+                        %element-article    = if_abap_behv=>mk-on ) TO reported-excel.
+
+      ENDIF.
+    ENDLOOP.
+
   ENDMETHOD.
 
   METHOD fileupload.

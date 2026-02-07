@@ -56,6 +56,19 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_instance_features.
+    READ ENTITIES OF zrap_i_excel IN LOCAL MODE
+      ENTITY excel
+        ALL FIELDS
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_excel).
+
+    result = VALUE #( FOR ls_excel IN lt_excel
+                    ( %tky    = ls_excel-%tky
+                      %update = COND #( WHEN ls_excel-Processed EQ abap_true
+                                        THEN if_abap_behv=>fc-o-disabled ELSE if_abap_behv=>fc-o-enabled )
+                      %delete = COND #( WHEN ls_excel-Processed EQ abap_true
+                                        THEN if_abap_behv=>fc-o-disabled ELSE if_abap_behv=>fc-o-enabled ) ) ).
+
   ENDMETHOD.
 
   METHOD get_global_authorizations.
@@ -178,8 +191,8 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
     LOOP AT lt_excel INTO DATA(ls_excel).
       SELECT COUNT( * )
         FROM zrap_excel
-        WHERE who_uuid ne @ls_excel-whouuid
-          and customer EQ @ls_excel-customer
+        WHERE who_uuid NE @ls_excel-whouuid
+          AND customer EQ @ls_excel-customer
           AND article  EQ @ls_excel-article.
       IF sy-subrc EQ 0.
         APPEND VALUE #( %tky = ls_excel-%tky ) TO failed-excel.
@@ -218,7 +231,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
         MAPPED mapped.
     ELSE.
       failed-excel = VALUE #( FOR ls_excel IN lt_excel ( %tky = ls_excel-%tky ) ).
-      reported-excel = vaLUE #(  FOR ls_excel IN lt_excel ( %tky = ls_excel-%tky
+      reported-excel = VALUE #(  FOR ls_excel IN lt_excel ( %tky = ls_excel-%tky
                         %state_area         = if_abap_behv=>state_area_all
                         %msg                = new_message_with_text(
                                                 text     = |Data is draft!Please save first|

@@ -37,19 +37,19 @@ authorization master ( global )
   determination checkmessage on modify { field Customer, Article; }
 
   side effects { field Customer affects field MessageType, field MessageCode, field MessageText;
-                  field Article  affects field MessageType, field MessageCode, field MessageText;
-                  //event refreshdata affects $self, messages;
-                  determine action validatecustomer executed on field Customer affects messages;
-                  determine action validatearticle  executed on field Article  affects messages;
-                  action call_bapi affects field processed, $self; }
+                 field Article  affects field MessageType, field MessageCode, field MessageText;
+                 //event refreshdata affects $self, messages;
+                 determine action validatecustomer executed on field Customer affects messages;
+                 determine action validatearticle  executed on field Article  affects messages;
+                 action call_bapi affects field processed, $self; }
 
   //event refreshdata for side effects;
 
   validation validatedata on save { create; update; field Customer, Article; }
 
   create ( precheck );
-  update;
-  delete ( features : global );
+  update ( features : instance );
+  delete ( features : instance );
 
   draft action Activate optimized;
   draft action Discard;

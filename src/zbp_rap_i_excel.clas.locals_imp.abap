@@ -46,6 +46,8 @@ CLASS lhc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys REQUEST requested_features FOR excel RESULT result.
     METHODS call_bapi FOR MODIFY
       IMPORTING keys FOR ACTION excel~call_bapi RESULT result.
+    METHODS checkmessage FOR DETERMINE ON MODIFY
+      IMPORTING keys FOR excel~checkmessage.
 ENDCLASS.
 
 CLASS lhc_zrap_i_excel IMPLEMENTATION.
@@ -106,7 +108,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                                            article  = if_abap_behv=>mk-on ).
         <ls_create>-processed   = '0'.
         <ls_create>-messagetype = 'S'.
-        <ls_create>-messagetext = |Data saved successfully!|.
+        <ls_create>-messagetext = |Data checked successfully!|.
       ENDIF.
     ENDLOOP.
 
@@ -207,9 +209,10 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
     IF lt_excel IS INITIAL.
       MODIFY ENTITIES OF zrap_i_excel IN LOCAL MODE
         ENTITY excel
-        UPDATE FIELDS ( processed )
-        WITH VALUE #( FOR ls_key IN keys ( %tky      = ls_key-%tky
-                                           processed = '1' ) )
+        UPDATE FIELDS ( processed messagetext )
+        WITH VALUE #( FOR ls_key IN keys ( %tky        = ls_key-%tky
+                                           processed   = '1'
+                                           messagetext = |Data processed successfully!| ) )
         REPORTED reported
         FAILED failed
         MAPPED mapped.
@@ -224,6 +227,42 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                         %element-article    = if_abap_behv=>mk-on ) ).
     ENDIF.
 
+  ENDMETHOD.
+
+  METHOD checkmessage.
+    READ ENTITIES OF zrap_i_excel IN LOCAL MODE
+      ENTITY excel
+        FIELDS ( customer )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_excel).
+
+    LOOP AT lt_excel INTO DATA(ls_excel).
+      SELECT COUNT( * )
+        FROM zrap_excel
+        WHERE who_uuid NE @ls_excel-whouuid
+          AND customer EQ @ls_excel-customer
+          AND article  EQ @ls_excel-article.
+      IF sy-subrc NE 0.
+        MODIFY ENTITIES OF zrap_i_excel IN LOCAL MODE
+          ENTITY excel
+          UPDATE FIELDS ( messagetype messageCode messagetext )
+          WITH VALUE #( ( %tky        = ls_excel-%tky
+                          messagetype = 'S'
+                          messageCode = 3
+                          messagetext = |Data checked successfully!| ) ).
+      ELSE.
+        MODIFY ENTITIES OF zrap_i_excel IN LOCAL MODE
+          ENTITY excel
+          UPDATE FIELDS ( messagetype messageCode messagetext )
+          WITH VALUE #( ( %tky        = ls_excel-%tky
+                          messagetype = 'E'
+                          messageCode = 1
+                          messagetext = |Data is already exist! { ls_excel-customer }/{ ls_excel-article }| ) )
+          REPORTED DATA(lt_reported).
+
+        reported-excel = CORRESPONDING #( lt_reported-excel ).
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
 ENDCLASS.

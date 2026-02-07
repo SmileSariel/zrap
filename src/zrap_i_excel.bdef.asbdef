@@ -34,14 +34,16 @@ authorization master ( global )
   determine action validatecustomer { validation validatedata; }
   determine action validatearticle  { validation validatedata; }
 
+  determination checkmessage on modify { field Customer, Article; }
+
   side effects { field Customer affects field MessageType, field MessageCode, field MessageText;
                   field Article  affects field MessageType, field MessageCode, field MessageText;
-                  determine action validatecustomer executed on field Customer affects field MessageType, field MessageCode, field MessageText, messages;
-                  determine action validatearticle  executed on field Article  affects field MessageType, field MessageCode, field MessageText, messages; }
+                  //event refreshdata affects $self, messages;
+                  determine action validatecustomer executed on field Customer affects messages;
+                  determine action validatearticle  executed on field Article  affects messages;
+                  action call_bapi affects field processed, $self; }
 
   //event refreshdata for side effects;
-
-  //side effects { event refreshdata affects $self, messages; }
 
   validation validatedata on save { create; update; field Customer, Article; }
 

@@ -39,6 +39,12 @@ annotate view ZRAP_C_EXCEL with
     label: 'To Call BAPI', 
     position: 30 
   }]
+  @UI.identification: [ {  
+    type: #FOR_ACTION, 
+    dataAction: 'CALL_BAPI', 
+    label: 'To Call BAPI', 
+    position: 10 
+  }]
   
   @UI.hidden: true
   WhoUUID;

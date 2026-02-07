@@ -33,17 +33,13 @@ annotate view ZRAP_C_EXCEL with
     dataAction: 'FILEDOWNLOAD', 
     label: 'Template(RAP)', 
     position: 20 
-  }, {  
-    type: #FOR_ACTION, 
-    dataAction: 'CALL_BAPI', 
-    label: 'To Call BAPI', 
-    position: 30 
   }]
   @UI.identification: [ {  
     type: #FOR_ACTION, 
     dataAction: 'CALL_BAPI', 
     label: 'To Call BAPI', 
-    position: 10 
+    position: 10,
+    hidden: #( Processed )
   }]
   
   @UI.hidden: true

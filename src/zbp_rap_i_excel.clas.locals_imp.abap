@@ -98,7 +98,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
                                            article  = if_abap_behv=>mk-on ).
         <ls_create>-messagetype = 'E'.
         <ls_create>-messagecode = 1.
-        <ls_create>-processed   = '0'.
+        <ls_create>-processed   = abap_false.
         <ls_create>-messagetext = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }|.
         APPEND VALUE #( %msg = new_message_with_text( severity = if_abap_behv_message=>severity-error
                                                       text     = |Data is already exist!{ <ls_create>-customer }/{ <ls_create>-article }| ) )
@@ -106,7 +106,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
       ELSE.
         <ls_create>-%control    = VALUE #( customer = if_abap_behv=>mk-on
                                            article  = if_abap_behv=>mk-on ).
-        <ls_create>-processed   = '0'.
+        <ls_create>-processed   = abap_false.
         <ls_create>-messagetype = 'S'.
         <ls_create>-messagetext = |Data checked successfully!|.
       ENDIF.
@@ -211,7 +211,7 @@ CLASS lhc_zrap_i_excel IMPLEMENTATION.
         ENTITY excel
         UPDATE FIELDS ( processed messagetext )
         WITH VALUE #( FOR ls_key IN keys ( %tky        = ls_key-%tky
-                                           processed   = '1'
+                                           processed   = abap_true
                                            messagetext = |Data processed successfully!| ) )
         REPORTED reported
         FAILED failed

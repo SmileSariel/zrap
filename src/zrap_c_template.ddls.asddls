@@ -46,5 +46,7 @@ define root view entity ZRAP_C_TEMPLATE
   @Semantics: {
     systemDateTime.lastChangedAt: true
   }
-  LastChangedAt
+  LastChangedAt,
+  
+  _BaseEntity
 }

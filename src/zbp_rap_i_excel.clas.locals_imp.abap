@@ -1,27 +1,27 @@
-*CLASS lsc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_saver.
-*
-*  PROTECTED SECTION.
-*
-*    METHODS save_modified REDEFINITION.
-*
-*ENDCLASS.
-*
-*CLASS lsc_zrap_i_excel IMPLEMENTATION.
-*
-*  METHOD save_modified.
-*    IF create-excel IS NOT INITIAL.
-*      READ ENTITIES OF zrap_i_excel IN LOCAL MODE
-*        ENTITY excel
-*          ALL FIELDS
-*          WITH CORRESPONDING #( create-excel )
-*        RESULT DATA(lt_excel).
-*    ENDIF.
-*
-*    RAISE ENTITY EVENT zrap_i_excel~refreshdata
-*      FROM VALUE #( FOR ls_excel IN create-excel ( %key = ls_excel-%key ) ).
-*  ENDMETHOD.
-*
-*ENDCLASS.
+CLASS lsc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_saver.
+
+  PROTECTED SECTION.
+
+    METHODS save_modified REDEFINITION.
+
+ENDCLASS.
+
+CLASS lsc_zrap_i_excel IMPLEMENTATION.
+
+  METHOD save_modified.
+    IF create-excel IS NOT INITIAL.
+      READ ENTITIES OF zrap_i_excel IN LOCAL MODE
+        ENTITY excel
+          ALL FIELDS
+          WITH CORRESPONDING #( create-excel )
+        RESULT DATA(lt_excel).
+    ENDIF.
+
+    RAISE ENTITY EVENT zrap_i_excel~refreshdata
+      FROM VALUE #( FOR ls_excel IN create-excel ( %key = ls_excel-%key ) ).
+  ENDMETHOD.
+
+ENDCLASS.
 
 CLASS lhc_zrap_i_excel DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.

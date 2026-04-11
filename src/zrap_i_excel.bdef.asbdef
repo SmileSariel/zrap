@@ -43,7 +43,7 @@ authorization master ( global )
                  determine action validatearticle  executed on field Article  affects messages;
                  action call_bapi affects field processed, $self; }
 
-  //event refreshdata for side effects;
+  event refreshdata for side effects;
 
   validation validatedata on save { create; update; field Customer, Article; }
 

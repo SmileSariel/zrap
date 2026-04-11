@@ -26,7 +26,7 @@ use etag
                   determine action validatearticle  executed on field Article  affects messages;
                   action call_bapi affects field processed, $self; }
 
-  //use event refreshdata;
+  use event refreshdata;
 
   use action Edit;
   use action Activate;

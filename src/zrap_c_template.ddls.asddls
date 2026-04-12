@@ -19,7 +19,7 @@ define root view entity ZRAP_C_TEMPLATE
   @Semantics.largeObject : { 
     mimeType: 'MimeType', 
     fileName: 'FileName', 
-    acceptableMimeTypes: [ 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ],
+    //acceptableMimeTypes: [ '*' ],  //application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
     cacheControl.maxAge: #MEDIUM,
     contentDispositionPreference: #INLINE //#ATTACHMENT - download as file #INLINE - open in new window
   }  

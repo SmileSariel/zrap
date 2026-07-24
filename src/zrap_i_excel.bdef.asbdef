@@ -29,7 +29,7 @@ authorization master ( global )
   static action ( features : global ) fileUpload deep parameter zrap_a_file_parameter;
   static action fileDownload result [1] zrap_a_template;
 
-  action ( features : instance ) call_bapi result [1..*] $self;
+  action ( features : instance ) call_bapi result [1] $self;
 
   determine action validatecustomer { validation validatedata; }
   determine action validatearticle  { validation validatedata; }

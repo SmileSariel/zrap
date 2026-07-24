@@ -20,7 +20,7 @@ use etag
   use action validatearticle;
 
   side effects { field Customer affects field MessageType, field MessageCode, field MessageText;
-                  field Article  affects field MessageType, field MessageCode, field MessageText;
+                 field Article  affects field MessageType, field MessageCode, field MessageText;
                   //event refreshdata affects $self, messages;
                   determine action validatecustomer executed on field Customer affects messages;
                   determine action validatearticle  executed on field Article  affects messages;
